@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+curve25519-dalek = { version = "4.1.1", features = [
+    "serde",
+    "alloc",
+    "rand_core",
+], default-features = false }
