@@ -1,6 +1,6 @@
 use crate::mem_op::MemOp;
-use curve25519_dalek::scalar::Scalar;
 use core::cmp::Ordering;
+use curve25519_dalek::scalar::Scalar;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Transcript {
@@ -18,11 +18,9 @@ impl Transcript {
 
     pub fn sort_by_addr_time(&self) -> Self {
         let mut sorted_ops = self.ops.clone();
-        sorted_ops.sort_by(|a, b| {
-            match cmp_scalar(&a.addr, &b.addr) {
-                Ordering::Equal => cmp_scalar(&a.time, &b.time),
-                other => other,
-            }
+        sorted_ops.sort_by(|a, b| match cmp_scalar(&a.addr, &b.addr) {
+            Ordering::Equal => cmp_scalar(&a.time, &b.time),
+            other => other,
         });
         Self { ops: sorted_ops }
     }
@@ -51,8 +49,8 @@ impl Transcript {
                             expected: Some(*expected_val),
                             actual: Some(op.value),
                         };
+                    } else {
                     }
-                    else{}
                 }
             }
         }
@@ -78,4 +76,10 @@ pub struct ConsistencyReport {
     pub first_bad_index: Option<usize>,
     pub expected: Option<Scalar>,
     pub actual: Option<Scalar>,
+}
+
+pub struct AddrTimestamps {
+    pub read_ts: Vec<Scalar>,  // length = n_ops
+    pub write_ts: Vec<Scalar>, // length = n_ops
+    pub audit_ts: Vec<Scalar>, // length = m (memory size)
 }
